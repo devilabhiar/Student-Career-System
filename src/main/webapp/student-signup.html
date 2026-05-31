@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-1: #0f172a;
+      --glass: rgba(255, 255, 255, 0.06);
+      --btn-grad: linear-gradient(90deg, #06b6d4, #4f46e5);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background:
+        radial-gradient(800px 400px at 10% 10%, rgba(124,58,237,0.15), transparent),
+        linear-gradient(135deg, var(--bg-1), #041024 60%);
+      color: #fff;
+      padding: 40px 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .signup-card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--glass);
+      padding: 32px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      animation: fadeUp .6s ease;
+    }
+
+    h3 {
+      font-weight: 700;
+      color: #fff;
+    }
+
+    label {
+      color: #dbeafe;
+      font-weight: 500;
+    }
+
+    .form-control, .form-select {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .form-control:focus, .form-select:focus {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.3);
+    }
+
+    .btn-primary {
+      background: var(--btn-grad);
+      border: none;
+      padding: 12px;
+      font-weight: 600;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(6,182,212,0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    #errorMsg {
+      background: rgba(255, 64, 64, 0.15);
+      border: 1px solid rgba(255, 64, 64, 0.3);
+      color: #ffb4b4;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(18px); }
+      to { opacity:1; transform: translateY(0); }
+    }
+    /* Select box background fix */
+.form-select {
+  background-color: rgba(255,255,255,0.12) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+}
+
+/* Dropdown options styling */
+.form-select option {
+  background-color: #0f172a !important;   /* dark blue/black */
+  color: #fff !important;
+  padding: 10px;
+}
+
+/* Highlight color when hovered */
+.form-select option:hover {
+  background-color: #1e293b !important;
+  color: #fff !important;
+}
+    
+  </style>
+</head>
+
+<body>
+
+  <div class="signup-card">
+    <h3 class="text-center mb-4">Student Signup</h3>
+
+    <div id="errorMsg" class="alert d-none" role="alert"></div>
+
+    <form id="signupForm" action="signup" method="post" novalidate>
+      
+      <div class="mb-3">
+        <label for="name">Full Name</label>
+        <input type="text" class="form-control" name="name" id="name" required pattern="[A-Za-z\s]{3,}">
+      </div>
+
+      <div class="mb-3">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" id="email" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" id="password" required minlength="6">
+      </div>
+
+      <div class="mb-3">
+        <label for="contact">Contact Number</label>
+        <input type="text" class="form-control" name="contact" id="contact" required pattern="[0-9]{10}">
+      </div>
+
+      <div class="mb-3">
+        <label for="course">Course</label>
+        <select class="form-select" name="course" id="course" required>
+          <option value="" disabled selected>-- Select Course --</option>
+          <option value="BCA">BCA</option>
+          <option value="B.Tech">B.Tech</option>
+          <option value="B.Sc">B.Sc</option>
+          <option value="MCA">MCA</option>
+          <option value="MBA">MBA</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Already have an account? <a href="student-login.html">Login here</a>
+    </p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("error")) {
+      const e = document.getElementById("errorMsg");
+      e.textContent = "Signup failed! Email may already be registered.";
+      e.classList.remove("d-none");
+    }
+
+    // Form Validation Alerts
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+      const name = document.getElementById("name");
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      const contact = document.getElementById("contact");
+
+      if (!name.value.match(/^[A-Za-z\s]{3,}$/)) {
+        e.preventDefault();
+        Swal.fire("Invalid Name", "Name must have at least 3 letters.", "warning");
+        return;
+      }
+
+      if (!email.value.includes("@")) {
+        e.preventDefault();
+        Swal.fire("Invalid Email", "Enter a valid email.", "warning");
+        return;
+      }
+
+      if (password.value.length < 6) {
+        e.preventDefault();
+        Swal.fire("Weak Password", "Minimum 6 characters required.", "warning");
+        return;
+      }
+
+      if (!contact.value.match(/^\d{10}$/)) {
+        e.preventDefault();
+        Swal.fire("Invalid Contact", "Enter a 10-digit number.", "warning");
+        return;
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+/* Custom styling if needed */
+h1 {
+  color: #2c3e50;
+}
+
+.card-title {
+  color: #007bff;
+  font-weight: bold;
+}
